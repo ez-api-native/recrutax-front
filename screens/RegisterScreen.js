@@ -1,10 +1,12 @@
 import {useFormik} from 'formik';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {AsyncStorage, StyleSheet, View} from 'react-native';
 import {TextInput, Button, Text} from 'react-native-paper';
+import axios from '../lib/axios';
 
 const RegisterScreen = ({navigation}) => {
-  const register = values => console.log(values);
+  const register = async values =>
+    await axios.post('/users', values).then(response => console.log(response));
 
   const {
     values: {email, password},

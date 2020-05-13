@@ -1,10 +1,14 @@
 import {useFormik} from 'formik';
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {AsyncStorage, View, StyleSheet} from 'react-native';
 import {Button, TextInput, Text} from 'react-native-paper';
+import axios from '../lib/axios';
 
 const LoginScreen = ({navigation}) => {
-  const login = values => console.log(values);
+  const login = async values =>
+    await axios
+      .post('/authentication_token', values)
+      .then(response => console.log(response));
 
   const {
     values: {email, password},
