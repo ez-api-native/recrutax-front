@@ -8,6 +8,7 @@ import BottomTabNavigator from './navigation/BottomTabNavigator';
 import RegisterScreen from './screens/RegisterScreen';
 import LoginScreen from './screens/LoginScreen';
 import {token} from './lib/asyncStorage';
+import ApplyScreen from './screens/ApplyScreen';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,7 @@ export default function App() {
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="Home" component={BottomTabNavigator} />
+          <Stack.Screen name="Apply" component={ApplyScreen} />
         </Stack.Navigator>
       </PaperProvider>
     </NavigationContainer>
