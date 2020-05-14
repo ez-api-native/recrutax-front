@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {TextInput, Button, Text} from 'react-native-paper';
-import axios from '../lib/axios';
+import axios from '~/lib/axios';
 
 const RegisterScreen = ({navigation}) => {
   const [errors, setErrors] = useState(null);
