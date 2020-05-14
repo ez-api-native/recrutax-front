@@ -2,7 +2,7 @@ import {useFormik} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import {TextInput, Button, Text, Title} from 'react-native-paper';
+import {TextInput, Button, Text, Title, RadioButton} from 'react-native-paper';
 import {authIsLogged, token} from '~/lib/asyncStorage';
 import axios from '~/lib/axios';
 
@@ -27,20 +27,20 @@ const RegisterScreen = ({navigation}) => {
   };
 
   const {
-    values: {email, password},
+    values: {email, password, roles},
     handleSubmit,
     handleChange,
   } = useFormik({
     initialValues: {
       email: '',
       password: '',
+      roles: '',
     },
-    onSubmit: values => register(values),
+    onSubmit: register,
   });
 
   return (
     <View>
-      <Title>Register</Title>
       <TextInput
         label="Email"
         name="email"
@@ -54,9 +54,13 @@ const RegisterScreen = ({navigation}) => {
         onChangeText={handleChange('password')}
         secureTextEntry
       />
+      <RadioButton.Group onValueChange={handleChange('roles')} value={roles}>
+        <RadioButton.Item label="Candidate" value="candidate" />
+        <RadioButton.Item label="Recruiter" value="recruiter" />
+      </RadioButton.Group>
       <Button onPress={handleSubmit}>Submit</Button>
       <Button onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.text}>Already have an account ? Sign Up Here</Text>
+        <Text style={styles.text}>Already have an account ? SignIn Here</Text>
       </Button>
       {errors && <Text>{errors}</Text>}
     </View>
