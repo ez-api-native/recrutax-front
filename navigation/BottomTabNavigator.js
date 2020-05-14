@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react';
-import AsyncStorage from '@react-native-community/async-storage';
-import {useNavigation} from '@react-navigation/native';
+import React, {useEffect} from 'react';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useNavigation} from '@react-navigation/native';
+
+import {authNotLogged} from '../lib/asyncStorage';
 import HomeScreen from '../screens/HomeScreen';
 import OfferScreen from '../screens/OfferScreen';
 
@@ -12,20 +12,8 @@ const INITIAL_ROUTE_NAME = 'Home';
 
 const BottomTabNavigator = () => {
   const navigation = useNavigation();
-
-  const alreadyLogged = async () => {
-    try {
-      const res = await AsyncStorage.getItem('JwtToken');
-      if (!res) {
-        navigation.navigate('Login');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
-    alreadyLogged();
+    authNotLogged(navigation);
   }, []);
 
   return (

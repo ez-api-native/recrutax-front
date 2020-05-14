@@ -1,38 +1,27 @@
 import 'react-native-gesture-handler';
 import React, {useEffect, useState} from 'react';
-import {AsyncStorage} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Provider as PaperProvider} from 'react-native-paper';
 
+import BottomTabNavigator from './navigation/BottomTabNavigator';
 import RegisterScreen from './screens/RegisterScreen';
 import LoginScreen from './screens/LoginScreen';
-import BottomTabNavigator from './navigation/BottomTabNavigator';
+import {token} from './lib/asyncStorage';
 
 const Stack = createStackNavigator();
 
 export default function App() {
-  const [token, setToken] = useState(null);
-  const alreadyLogged = async () => {
-    try {
-      const res = await AsyncStorage.getItem('JwtToken');
-      if (!res) {
-        setToken(res);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+  const [tokenJwt, setTokenJwt] = useState(null);
   useEffect(() => {
-    alreadyLogged();
+    setTokenJwt(token);
   }, []);
 
   return (
     <NavigationContainer>
       <PaperProvider>
         <Stack.Navigator
-          initialRouteName={token ? 'Home' : 'Login'}
+          initialRouteName={tokenJwt ? 'Home' : 'Login'}
           headerMode="none">
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />

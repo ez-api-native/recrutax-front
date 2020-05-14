@@ -1,26 +1,15 @@
 import {useFormik} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
 import {TextInput, Button, Text} from 'react-native-paper';
+import {authIsLogged} from '../lib/asyncStorage';
 import axios from '../lib/axios';
 
 const RegisterScreen = ({navigation}) => {
   const [errors, setErrors] = useState(null);
 
-  const alreadyLogged = async () => {
-    try {
-      const res = await AsyncStorage.getItem('JwtToken');
-      if (!res) {
-        navigation.navigate('Login');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
-    alreadyLogged();
+    authIsLogged(navigation);
   }, []);
 
   const register = async values =>
