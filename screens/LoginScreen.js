@@ -2,32 +2,34 @@ import {useFormik} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Button, TextInput, Text, Title} from 'react-native-paper';
+import {HelperText, Button, TextInput, Text, Title} from 'react-native-paper';
+import AuthValidationSchema from '~/lib/validationSchema';
 import {token, authIsLogged} from '~/lib/asyncStorage';
 import axios from '~/lib/axios';
 
 const LoginScreen = ({navigation}) => {
-  const [errors, setErrors] = useState(null);
+  const [errorsForm, setErrorsForm] = useState(null);
 
   useEffect(() => {
     authIsLogged(navigation);
-  }, []);
+  }, [navigation]);
 
   const login = async values => {
     const res = await axios
       .post('/authentication_token', values)
       .then(response => JSON.stringify(response.data.token))
-      .catch(error => setErrors(error));
+      .catch(error => setErrorsForm(error));
     await AsyncStorage.setItem('JwtToken', res)
       .then(() => {
         if (token) {
           navigation.navigate('Home');
         }
       })
-      .catch(error => setErrors(error));
+      .catch(error => setErrorsForm(error));
   };
 
   const {
+    errors,
     values: {email, password},
     handleSubmit,
     handleChange,
@@ -36,6 +38,7 @@ const LoginScreen = ({navigation}) => {
       email: '',
       password: '',
     },
+    validationSchema: AuthValidationSchema,
     onSubmit: values => login(values),
   });
 
@@ -48,6 +51,9 @@ const LoginScreen = ({navigation}) => {
         value={email}
         onChangeText={handleChange('email')}
       />
+      <HelperText type="error" visible={errors.email}>
+        {errors.email}
+      </HelperText>
       <TextInput
         label="Password"
         name="password"
@@ -55,11 +61,14 @@ const LoginScreen = ({navigation}) => {
         onChangeText={handleChange('password')}
         secureTextEntry
       />
+      <HelperText type="error" visible={errors.password}>
+        {errors.password}
+      </HelperText>
       <Button onPress={handleSubmit}>Submit</Button>
       <Button onPress={() => navigation.navigate('Register')}>
         <Text style={styles.text}>No account ? Sign Up Here</Text>
       </Button>
-      {errors && <Text>{errors}</Text>}
+      {errorsForm && <Text>{errorsForm}</Text>}
     </View>
   );
 };

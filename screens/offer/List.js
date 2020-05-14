@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
+import {ScrollView, RefreshControl} from 'react-native';
 import {Button} from 'react-native-paper';
 import axios from '~/lib/axios';
 import List from '~/components/List';
 import Header from '~/components/Header';
 
-const OffersList = () => {
+const OffersList = ({navigation}) => {
+  const [refreshing, setRefreshing] = useState(false);
   const [offers, setOffers] = useState([]);
   const fetchData = async () => {
-    axios.get('/offers').then(({data}) => {
+    await axios.get('/offers').then(({data}) => {
       setOffers(data['hydra:member']);
     });
   };
@@ -18,13 +19,28 @@ const OffersList = () => {
   }, []);
 
   return (
-    <View>
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={async () => {
+            setRefreshing(true);
+            setOffers([]);
+            await fetchData();
+            setRefreshing(false);
+          }}
+        />
+      }>
       <Header title="Offers" />
-      <Button onPress={fetchData}>
-        <Text>Fetch offers</Text>
+      <Button onPress={() => navigation.navigate('OfferCreate')}>
+        Create an offer
       </Button>
-      <List columns={['id', 'name']} data={offers} />
-    </View>
+      <List
+        columns={['id', 'name']}
+        data={offers}
+        onPress={offer => navigation.navigate('OfferView', {offer})}
+      />
+    </ScrollView>
   );
 };
 
