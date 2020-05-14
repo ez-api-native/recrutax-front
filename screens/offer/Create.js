@@ -5,7 +5,7 @@ import {Button, TextInput} from 'react-native-paper';
 import axios from '~/lib/axios';
 import DateInput from '~/components/DateInput';
 
-const OfferCreate = () => {
+const OfferCreate = ({navigation}) => {
   const {
     values: {
       name,
@@ -30,7 +30,9 @@ const OfferCreate = () => {
     },
     onSubmit: async values => {
       const res = await axios.post('/offers', values);
-      console.log(res);
+      if (res.status === 201) {
+        navigation.navigate('Offer');
+      }
     },
   });
 

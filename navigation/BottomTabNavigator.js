@@ -30,7 +30,6 @@ const BottomTabNavigator = () => {
               color={color}
               focused={focused}
               size={26}
-              style={{marginBottom: 3}}
               name="home"
             />
           ),
@@ -46,7 +45,36 @@ const BottomTabNavigator = () => {
               color={color}
               focused={focused}
               size={26}
-              style={{marginBottom: 3}}
+              name="library-books"
+            />
+          ),
+        }}
+      />
+      <NavigatorTab.Screen
+        name="OfferCreate"
+        component={OfferCreateScreen}
+        options={{
+          title: 'OfferCreate',
+          tabBarIcon: ({color, focused}) => (
+            <MaterialCommunityIcons
+              color={color}
+              focused={focused}
+              size={26}
+              name="library-books"
+            />
+          ),
+        }}
+      />
+      <NavigatorTab.Screen
+        name="OfferView"
+        component={OfferViewScreen}
+        options={{
+          title: 'OfferView',
+          tabBarIcon: ({color, focused}) => (
+            <MaterialCommunityIcons
+              color={color}
+              focused={focused}
+              size={26}
               name="library-books"
             />
           ),
