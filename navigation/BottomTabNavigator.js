@@ -2,7 +2,6 @@ import React, {useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import HomeScreen from '~/screens/HomeScreen';
 import OfferScreen from '~/screens/offer/List';
 import OfferCreateScreen from '~/screens/offer/Create';
 import OfferViewScreen from '~/screens/offer/View';
@@ -24,21 +23,6 @@ const BottomTabNavigator = () => {
       activeColor="#1e8ae9"
       barStyle={{backgroundColor: 'white'}}>
       <NavigatorTab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          title: 'Home',
-          tabBarIcon: ({color, focused}) => (
-            <MaterialCommunityIcons
-              color={color}
-              focused={focused}
-              size={26}
-              name="home"
-            />
-          ),
-        }}
-      />
-      <NavigatorTab.Screen
         name="Offer"
         component={OfferScreen}
         options={{
@@ -48,7 +32,7 @@ const BottomTabNavigator = () => {
               color={color}
               focused={focused}
               size={26}
-              name="library-books"
+              name="format-list-bulleted"
             />
           ),
         }}
@@ -63,7 +47,7 @@ const BottomTabNavigator = () => {
               color={color}
               focused={focused}
               size={26}
-              name="library-books"
+              name="format-color-text"
             />
           ),
         }}

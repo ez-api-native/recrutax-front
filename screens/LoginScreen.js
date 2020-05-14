@@ -1,10 +1,17 @@
-import {useFormik} from 'formik';
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {View} from 'react-native';
+import {
+  Button,
+  Colors,
+  HelperText,
+  Text,
+  TextInput,
+  Title,
+} from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
-import {HelperText, Button, TextInput, Text, Title} from 'react-native-paper';
+import {useFormik} from 'formik';
 import AuthValidationSchema from '~/lib/validationSchema';
-import {token, authIsLogged} from '~/lib/asyncStorage';
+import {authIsLogged} from '~/lib/asyncStorage';
 import axios from '~/lib/axios';
 
 const LoginScreen = ({navigation}) => {
@@ -14,33 +21,43 @@ const LoginScreen = ({navigation}) => {
     authIsLogged(navigation);
   }, [navigation]);
 
-  const login = async values => {
-    const res = await axios
-      .post('/authentication_token', values)
-      .then(response => JSON.stringify(response.data.token))
-      .catch(error => setErrorsForm(error));
-    await AsyncStorage.setItem('JwtToken', res)
-      .then(() => {
-        if (token) {
-          navigation.navigate('Home');
-        }
-      })
-      .catch(error => setErrorsForm(error));
-  };
-
   const {
     errors,
     values: {email, password},
     handleSubmit,
     handleChange,
+    setFieldError,
   } = useFormik({
     initialValues: {
       email: '',
       password: '',
     },
     validationSchema: AuthValidationSchema,
-    onSubmit: values => login(values),
+    onSubmit: async values => {
+      try {
+        const res = await axios.post('/authentication_token', values);
+        if (res.status === 200) {
+          await AsyncStorage.setItem(
+            'JwtToken',
+            JSON.stringify(res.data.token),
+          );
+        }
+      } catch (e) {
+        setErrorsForm('Email or password incorrect');
+      }
+    },
   });
+
+  const handleResetPassword = useCallback(async () => {
+    if (email) {
+      await axios.post('/reset-password', {
+        email,
+      });
+      navigation.navigate('ResetPassword');
+    } else {
+      setFieldError('email', 'Please fill your email');
+    }
+  }, [email, navigation, setFieldError]);
 
   return (
     <View>
@@ -64,19 +81,21 @@ const LoginScreen = ({navigation}) => {
       <HelperText type="error" visible={errors.password}>
         {errors.password}
       </HelperText>
-      <Button onPress={handleSubmit}>Submit</Button>
-      <Button onPress={() => navigation.navigate('Register')}>
-        <Text style={styles.text}>No account ? Sign Up Here</Text>
+      <Button mode="contained" onPress={handleSubmit}>
+        Login
+      </Button>
+      <Button compact color={Colors.black} onPress={handleResetPassword}>
+        Reset password
+      </Button>
+      <Button
+        compact
+        color={Colors.black}
+        onPress={() => navigation.navigate('Register')}>
+        No account ? Sign Up Here
       </Button>
       {errorsForm && <Text>{errorsForm}</Text>}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  text: {
-    alignItems: 'center',
-  },
-});
 
 export default LoginScreen;
