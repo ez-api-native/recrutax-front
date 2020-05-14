@@ -6,6 +6,7 @@ import HomeScreen from '~/screens/HomeScreen';
 import OfferScreen from '~/screens/offer/List';
 import OfferCreateScreen from '~/screens/offer/Create';
 import OfferViewScreen from '~/screens/offer/View';
+import ApplyScreen from '~/screens/ApplyScreen';
 import {authNotLogged} from '~/lib/asyncStorage';
 
 const NavigatorTab = createMaterialBottomTabNavigator();
@@ -73,6 +74,21 @@ const BottomTabNavigator = () => {
         component={OfferViewScreen}
         options={{
           title: 'OfferView',
+          tabBarIcon: ({color, focused}) => (
+            <MaterialCommunityIcons
+              color={color}
+              focused={focused}
+              size={26}
+              name="library-books"
+            />
+          ),
+        }}
+      />
+      <NavigatorTab.Screen
+        name="Apply"
+        component={ApplyScreen}
+        options={{
+          title: 'Apply',
           tabBarIcon: ({color, focused}) => (
             <MaterialCommunityIcons
               color={color}

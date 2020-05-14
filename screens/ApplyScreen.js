@@ -4,12 +4,13 @@ import {View, Image} from 'react-native';
 import {TextInput, Button, Avatar, Text} from 'react-native-paper';
 import FilePickerManager from 'react-native-file-picker';
 import ImagePicker from 'react-native-image-picker';
-import axios from 'axios';
+import axios from '~/lib/axios';
+import RNFetchBlob from 'rn-fetch-blob';
+import AsyncStorage from '@react-native-community/async-storage';
 
-const ApplyScreen = ({navigation}) => {
-  const apply = values => console.log(values);
+const ApplyScreen = () => {
   const [picture, setPicture] = useState(null);
-  const [cv, setCV] = useState(null);
+  const [resume, setResume] = useState(null);
 
   const {
     values: {
@@ -20,10 +21,11 @@ const ApplyScreen = ({navigation}) => {
       age,
       address,
       motivation,
-      salaryClaim,
+      wantedIncome,
     },
     handleSubmit,
     handleChange,
+    resetForm,
   } = useFormik({
     initialValues: {
       firstname: '',
@@ -33,14 +35,34 @@ const ApplyScreen = ({navigation}) => {
       age: '',
       address: '',
       motivation: '',
-      salaryClaim: '',
-      cv: '',
+      wantedIncome: '',
     },
-    onSubmit: values =>
-      apply({...values, picture: picture.fileName, cv: cv.fileName}),
+    onSubmit: async values => {
+      const res = await axios
+        .post('/submissions', {
+          firstname: values.firstname,
+          lastname: values.lastname,
+          sexe: values.sexe,
+          email: values.email,
+          age: parseInt(values.age, 10),
+          address: values.address,
+          motivation: values.motivation,
+          wantedIncome: parseInt(values.wantedIncome, 10),
+          picture: picture,
+          resume: resume,
+        })
+        .catch(err => {
+          console.log(JSON.stringify(err));
+        });
+      if (res.status === 201) {
+        resetForm();
+      }
+    },
   });
 
   const handleChoosePicture = () => {
+    const token = AsyncStorage.getItem('token');
+
     ImagePicker.showImagePicker(response => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
@@ -49,12 +71,33 @@ const ApplyScreen = ({navigation}) => {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        setPicture(response);
+        RNFetchBlob.fetch(
+          'POST',
+          'https://localhost:8443/media_objects',
+          {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+          [
+            {
+              name: 'file',
+              filename: response.fileName,
+              type: response.type,
+              data: RNFetchBlob.wrap('file://' + response.path),
+            },
+          ],
+        )
+          .then(res => res.json())
+          .then(result => setPicture(result['@id']))
+          .catch(err => {
+            console.log(err);
+          });
       }
     });
   };
 
   const handleChooseFile = () => {
+    const token = AsyncStorage.getItem('token');
     FilePickerManager.showFilePicker(null, response => {
       if (response.didCancel) {
         console.log('User cancelled file picker');
@@ -63,27 +106,27 @@ const ApplyScreen = ({navigation}) => {
       } else if (response.type !== 'application/pdf') {
         console.log('Not pdf');
       } else {
-        const headers = new Headers();
-        headers.append('Content-Type', 'multipart/form-data');
-        headers.append(
-          'Authorization',
-          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE1ODk0NDgxMTUsImV4cCI6MTU4OTQ1MTcxNSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiZmlyZW5haWtAZ21haWwuY29tIn0.dzMNvhDFUohU6z8x7cxNjbLobXwA_L33PdZX-IXmG4nAlilGVheVS9xMuOVe-sjNENvdLOUr5pyqryn7QxXDq1Nt7NYwLtUAhHTDQgmrCUi6VONb7MTlbiWGBMmmhAukccoTtL-BJDiZuhn0uqwW7EIDPuVjwBagIFUA0rrJNEs3hrbcLBoRzh4JjsNLpky_eepFKqV8DbvP67Y42j6_sSAoe56Z-HIx4seTVO6oMDGiU950uLPQw7ARddnUY4PK6saVzzWHoZiZsJgbY4CSqbDk6ImTEDKMZ-g1JF5vs3VDkYKasJrGYeBUagf8wfN8WgpQRjSVmosHhDiAdK-rdR22Kn2tj0swwWX34zCxqf0xTddFWmqopoOBP98i8QyGW_83FKQrkEZ4_rC6mya-cvw_c8e_RtpdR3DXEvyuC1mpdT0yDjZ24n2lqooZMZ3yEPGF515VHbCmRM1Xpihy8PS6rTkoQ4LWimyzRFIhFIAtISI-DTegWmf1rWClLV1psB_f0n1756sp2P105v-TSWskbuRSR0V9E46sj5gwaI4MUFgubO8JTs6J7fd78EsdIYjSY3HVkFgpO9c4yDaXz8CfnHZaKw7SYsZhS9MKMIbRba_K64JiivuqKqptySC9APNnM8gRdnA7F8U4QGuZFxTVD4fOwAO59kDDdWWse6Y',
-        );
-        const formdata = new FormData();
-        formdata.append('file', {
-          uri: 'file://' + response.uri,
-          name: response.fileName,
-          type: response.type,
-        });
-        axios
-          .post('https://localhost:8443/media_objects', formdata, {
-            headers,
-          })
-          .then(res => res.text())
-          .then(result => console.log('result', result))
-          .catch(error => console.log(JSON.stringify(error)));
-
-        setCV(response);
+        RNFetchBlob.fetch(
+          'POST',
+          'https://localhost:8443/media_objects',
+          {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+          [
+            {
+              name: 'file',
+              filename: response.fileName,
+              type: response.type,
+              data: RNFetchBlob.wrap('file://' + response.path),
+            },
+          ],
+        )
+          .then(res => res.json())
+          .then(result => setResume(result['@id']))
+          .catch(err => {
+            console.log(err);
+          });
       }
     });
   };
@@ -91,7 +134,7 @@ const ApplyScreen = ({navigation}) => {
   return (
     <View>
       <View>
-        {/* <TextInput
+        <TextInput
           label="Firstname"
           name="firstname"
           value={firstname}
@@ -109,14 +152,6 @@ const ApplyScreen = ({navigation}) => {
           value={sexe}
           onChangeText={handleChange('sexe')}
         />
-        {picture && (
-          <Image
-            source={{
-              uri: 'file://' + picture.uri,
-            }}
-          />
-        )}
-        <Button onPress={handleChoosePicture}>Choose picture</Button>
         <TextInput
           label="Email"
           name="email"
@@ -143,13 +178,13 @@ const ApplyScreen = ({navigation}) => {
           multiline={true}
         />
         <TextInput
-          label="Salary claim"
-          name="salaryClaim"
-          value={salaryClaim}
-          onChangeText={handleChange('salaryClaim')}
-        /> */}
-        <Button onPress={handleChooseFile}>Choose CV</Button>
-        {cv && <Text>{cv.fileName}</Text>}
+          label="Wanted income"
+          name="wantedIncome"
+          value={wantedIncome}
+          onChangeText={handleChange('wantedIncome')}
+        />
+        <Button onPress={handleChoosePicture}>Choose picture</Button>
+        <Button onPress={handleChooseFile}>Choose resume</Button>
         <Button onPress={handleSubmit}>Submit</Button>
       </View>
     </View>
