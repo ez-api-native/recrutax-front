@@ -1,10 +1,42 @@
 import {useFormik} from 'formik';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import {Button, TextInput, Text} from 'react-native-paper';
+import axios from '../lib/axios';
 
 const LoginScreen = ({navigation}) => {
-  const login = values => console.log(values);
+  const [errors, setErrors] = useState(null);
+  const token = async () => await AsyncStorage.getItem('JwtToken');
+
+  const alreadyLogged = async () => {
+    try {
+      const res = await AsyncStorage.getItem('JwtToken');
+      if (!res) {
+        navigation.navigate('Login');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    alreadyLogged();
+  }, []);
+
+  const login = async values => {
+    const res = await axios
+      .post('/authentication_token', values)
+      .then(response => JSON.stringify(response.data.token))
+      .catch(error => setErrors(error));
+    await AsyncStorage.setItem('JwtToken', res)
+      .then(() => {
+        if (token) {
+          navigation.navigate('Home');
+        }
+      })
+      .catch(error => setErrors(error));
+  };
 
   const {
     values: {email, password},
@@ -40,6 +72,7 @@ const LoginScreen = ({navigation}) => {
             Already have an account ? Sign Up Here
           </Text>
         </Button>
+        {errors && <Text>{errors}</Text>}
       </View>
     </View>
   );
