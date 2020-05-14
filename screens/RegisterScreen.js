@@ -2,7 +2,13 @@ import {useFormik} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import {TextInput, Button, Text, Title, RadioButton, HelperText} from 'react-native-paper';
+import {
+  TextInput,
+  Button,
+  Text,
+  RadioButton,
+  HelperText,
+} from 'react-native-paper';
 import AuthValidationSchema from '~/lib/validationSchema';
 import {authIsLogged, token} from '~/lib/asyncStorage';
 import axios from '~/lib/axios';
@@ -12,7 +18,7 @@ const RegisterScreen = ({navigation}) => {
 
   useEffect(() => {
     authIsLogged(navigation);
-  }, []);
+  }, [navigation]);
 
   const register = async values => {
     const res = await axios
@@ -29,7 +35,7 @@ const RegisterScreen = ({navigation}) => {
 
   const {
     errors,
-    values: {email, password},
+    values: {email, password, roles},
     handleSubmit,
     handleChange,
   } = useFormik({
