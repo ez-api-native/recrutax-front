@@ -7,6 +7,7 @@ import {Provider as PaperProvider} from 'react-native-paper';
 import DrawerNavigator from '~/navigation/DrawerNavigator';
 import RegisterScreen from './screens/RegisterScreen';
 import LoginScreen from './screens/LoginScreen';
+import ResetPasswordScreen from '~/screens/ResetPasswordScreen';
 import {token} from './lib/asyncStorage';
 
 const Stack = createStackNavigator();
@@ -21,6 +22,7 @@ export default function App() {
           <Stack.Screen name="Drawer" component={DrawerNavigator} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
         </Stack.Navigator>
       </PaperProvider>
     </NavigationContainer>

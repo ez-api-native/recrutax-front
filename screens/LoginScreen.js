@@ -82,8 +82,22 @@ const LoginScreen = ({navigation}) => {
       <HelperText type="error" visible={errors.password}>
         {errors.password}
       </HelperText>
-      <Button mode="contained" onPress={handleSubmit}>
-        Login
+      <Button onPress={handleSubmit}>Submit</Button>
+      <Button
+        onPress={() => {
+          if (email) {
+            axios.post('/reset-password', {
+              email,
+            });
+            navigation.navigate('ResetPassword');
+          } else {
+            setFieldError('email', 'Please fill your email');
+          }
+        }}>
+        Reset password
+      </Button>
+      <Button onPress={() => navigation.navigate('Register')}>
+        <Text style={styles.text}>No account ? Sign Up Here</Text>
       </Button>
       <Button compact color={Colors.black} onPress={handleResetPassword}>
         Reset password
