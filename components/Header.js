@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Text, Title} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
-import {logout} from '../lib/asyncStorage';
+import {logout} from '~/lib/asyncStorage';
 
 const Header = ({title}) => {
   const navigation = useNavigation();

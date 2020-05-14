@@ -1,11 +1,10 @@
 import React, {useEffect} from 'react';
+import {useNavigation} from '@react-navigation/native';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useNavigation} from '@react-navigation/native';
-
-import {authNotLogged} from '../lib/asyncStorage';
-import HomeScreen from '../screens/HomeScreen';
-import OfferScreen from '../screens/OfferScreen';
+import HomeScreen from '~/screens/HomeScreen';
+import OfferScreen from '~/screens/offer/List';
+import {authNotLogged} from '~/lib/asyncStorage';
 
 const NavigatorTab = createMaterialBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';

@@ -2,8 +2,8 @@ import {useFormik} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {TextInput, Button, Text} from 'react-native-paper';
-import {authIsLogged} from '../lib/asyncStorage';
-import axios from '../lib/axios';
+import {authIsLogged} from '~/lib/asyncStorage';
+import axios from '~/lib/axios';
 
 const RegisterScreen = ({navigation}) => {
   const [errors, setErrors] = useState(null);
