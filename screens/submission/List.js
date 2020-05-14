@@ -4,25 +4,18 @@ import {Button} from 'react-native-paper';
 import axios from '~/lib/axios';
 import List from '~/components/List';
 import Header from '~/components/Header';
-import getRole from '~/lib/JWTDecoder';
 
-const OffersList = ({navigation}) => {
+const SubmissionsList = ({navigation}) => {
   const [refreshing, setRefreshing] = useState(false);
-  const [role, setRole] = useState('');
-  const [offers, setOffers] = useState([]);
+  const [submissions, setSubmissions] = useState([]);
   const fetchData = async () => {
-    await axios.get('/offers').then(({data}) => {
-      setOffers(data['hydra:member']);
+    await axios.get('/submissions').then(({data}) => {
+      setSubmissions(data['hydra:member']);
     });
   };
 
   useEffect(() => {
-    const getUserRole = async () => {
-      const userRole = await getRole();
-      setRole(userRole);
-    };
     fetchData();
-    getUserRole();
   }, []);
 
   return (
@@ -32,25 +25,20 @@ const OffersList = ({navigation}) => {
           refreshing={refreshing}
           onRefresh={async () => {
             setRefreshing(true);
-            setOffers([]);
+            setSubmissions([]);
             await fetchData();
             setRefreshing(false);
           }}
         />
       }>
-      <Header title="Offers" />
-      {role === 'recruiter' && (
-        <Button onPress={() => navigation.navigate('OfferCreate')}>
-          Create an offer
-        </Button>
-      )}
+      <Header title="Submissions" />
       <List
         columns={['id', 'name']}
-        data={offers}
-        onPress={offer => navigation.navigate('OfferView', {offer})}
+        data={submissions}
+        // onPress={submission => navigation.navigate('SubmissionView', {submission})}
       />
     </ScrollView>
   );
 };
 
-export default OffersList;
+export default SubmissionsList;
