@@ -1,16 +1,18 @@
 import {useFormik} from 'formik';
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
-  TextInput,
   Button,
-  Text,
-  RadioButton,
+  Colors,
   HelperText,
+  RadioButton,
+  Text,
+  TextInput,
+  Title,
 } from 'react-native-paper';
 import AuthValidationSchema from '~/lib/validationSchema';
-import {authIsLogged, token} from '~/lib/asyncStorage';
+import {authIsLogged} from '~/lib/asyncStorage';
 import axios from '~/lib/axios';
 
 const RegisterScreen = ({navigation}) => {
@@ -19,19 +21,6 @@ const RegisterScreen = ({navigation}) => {
   useEffect(() => {
     authIsLogged(navigation);
   }, [navigation]);
-
-  const register = async values => {
-    const res = await axios
-      .post('/users', values)
-      .catch(error => setErrorsForm(error));
-    await AsyncStorage.setItem('JwtToken', res)
-      .then(() => {
-        if (token) {
-          navigation.navigate('Home');
-        }
-      })
-      .catch(error => setErrorsForm(error));
-  };
 
   const {
     errors,
@@ -45,11 +34,33 @@ const RegisterScreen = ({navigation}) => {
       roles: '',
     },
     validationSchema: AuthValidationSchema,
-    onSubmit: values => register(values),
+    onSubmit: async values => {
+      try {
+        const res = await axios.post('/users', values);
+        axios
+          .post('/authentication_token', {
+            email: res.data.email,
+            password: res.data.password,
+          })
+          .then(async r => {
+            if (r.status === 200) {
+              await AsyncStorage.setItem(
+                'JwtToken',
+                JSON.stringify(r.data.token),
+              );
+              navigation.navigate('Home');
+            }
+          });
+        navigation.navigate('Home');
+      } catch (e) {
+        setErrorsForm(e);
+      }
+    },
   });
 
   return (
     <View>
+      <Title>Register</Title>
       <TextInput
         label="Email"
         name="email"
@@ -76,19 +87,18 @@ const RegisterScreen = ({navigation}) => {
       <HelperText type="error" visible={errors.roles}>
         {errors.roles}
       </HelperText>
-      <Button onPress={handleSubmit}>Submit</Button>
-      <Button onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.text}>Already have an account ? SignIn Here</Text>
+      <Button mode="contained" onPress={handleSubmit}>
+        Register
+      </Button>
+      <Button
+        compact
+        color={Colors.black}
+        onPress={() => navigation.navigate('Login')}>
+        Already have an account ? SignIn Here
       </Button>
       {errorsForm && <Text>{errorsForm}</Text>}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  text: {
-    alignItems: 'center',
-  },
-});
 
 export default RegisterScreen;
