@@ -1,14 +1,15 @@
 import {useFormik} from 'formik';
 import React, {useState} from 'react';
-import {View, Image} from 'react-native';
-import {TextInput, Button, Avatar, Text} from 'react-native-paper';
+import {KeyboardAvoidingView, ScrollView} from 'react-native';
+import {Button, TextInput} from 'react-native-paper';
 import FilePickerManager from 'react-native-file-picker';
 import ImagePicker from 'react-native-image-picker';
 import axios from '~/lib/axios';
 import RNFetchBlob from 'rn-fetch-blob';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const ApplyScreen = () => {
+const ApplyScreen = ({route, navigation}) => {
+  // const {offer, submission} = route.params;
   const [picture, setPicture] = useState(null);
   const [resume, setResume] = useState(null);
 
@@ -38,22 +39,19 @@ const ApplyScreen = () => {
       wantedIncome: '',
     },
     onSubmit: async values => {
-      const res = await axios
-        .post('/submissions', {
-          firstname: values.firstname,
-          lastname: values.lastname,
-          sexe: values.sexe,
-          email: values.email,
-          age: parseInt(values.age, 10),
-          address: values.address,
-          motivation: values.motivation,
-          wantedIncome: parseInt(values.wantedIncome, 10),
-          picture: picture,
-          resume: resume,
-        })
-        .catch(err => {
-          console.log(JSON.stringify(err));
-        });
+      const res = await axios.post('/submissions', {
+        firstname: values.firstname,
+        lastname: values.lastname,
+        sexe: values.sexe,
+        email: values.email,
+        age: parseInt(values.age, 10),
+        address: values.address,
+        motivation: values.motivation,
+        wantedIncome: parseInt(values.wantedIncome, 10),
+        picture: picture,
+        resume: resume,
+        // offer: offer['@id'],
+      });
       if (res.status === 201) {
         resetForm();
       }
@@ -96,8 +94,8 @@ const ApplyScreen = () => {
     });
   };
 
-  const handleChooseFile = () => {
-    const token = AsyncStorage.getItem('token');
+  const handleChooseFile = async () => {
+    const token = await AsyncStorage.getItem('token');
     FilePickerManager.showFilePicker(null, response => {
       if (response.didCancel) {
         console.log('User cancelled file picker');
@@ -132,8 +130,8 @@ const ApplyScreen = () => {
   };
 
   return (
-    <View>
-      <View>
+    <ScrollView>
+      <KeyboardAvoidingView>
         <TextInput
           label="Firstname"
           name="firstname"
@@ -186,8 +184,8 @@ const ApplyScreen = () => {
         <Button onPress={handleChoosePicture}>Choose picture</Button>
         <Button onPress={handleChooseFile}>Choose resume</Button>
         <Button onPress={handleSubmit}>Submit</Button>
-      </View>
-    </View>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 
