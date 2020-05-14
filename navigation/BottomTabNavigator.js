@@ -6,8 +6,9 @@ import HomeScreen from '~/screens/HomeScreen';
 import OfferScreen from '~/screens/offer/List';
 import OfferCreateScreen from '~/screens/offer/Create';
 import OfferViewScreen from '~/screens/offer/View';
-import ApplyScreen from '~/screens/ApplyScreen';
+import Form from '~/screens/submission/Form';
 import {authNotLogged} from '~/lib/asyncStorage';
+import Apply from '~/screens/submission/Apply';
 
 const NavigatorTab = createMaterialBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
@@ -85,8 +86,23 @@ const BottomTabNavigator = () => {
         }}
       />
       <NavigatorTab.Screen
-        name="Apply"
-        component={ApplyScreen}
+        name="ApplySearch"
+        component={Apply}
+        options={{
+          title: 'Apply',
+          tabBarIcon: ({color, focused}) => (
+            <MaterialCommunityIcons
+              color={color}
+              focused={focused}
+              size={26}
+              name="library-books"
+            />
+          ),
+        }}
+      />
+      <NavigatorTab.Screen
+        name="ApplyForm"
+        component={Form}
         options={{
           title: 'Apply',
           tabBarIcon: ({color, focused}) => (

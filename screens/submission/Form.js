@@ -8,8 +8,8 @@ import axios from '~/lib/axios';
 import RNFetchBlob from 'rn-fetch-blob';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const ApplyScreen = ({route, navigation}) => {
-  // const {offer, submission} = route.params;
+const Form = ({route, navigation}) => {
+  const {submission} = route.params;
   const [picture, setPicture] = useState(null);
   const [resume, setResume] = useState(null);
 
@@ -32,14 +32,14 @@ const ApplyScreen = ({route, navigation}) => {
       firstname: '',
       lastname: '',
       sexe: '',
-      email: '',
       age: '',
       address: '',
       motivation: '',
       wantedIncome: '',
+      email: submission.email,
     },
     onSubmit: async values => {
-      const res = await axios.post('/submissions', {
+      const res = await axios.patch(`/submissions/${submission.id}`, {
         firstname: values.firstname,
         lastname: values.lastname,
         sexe: values.sexe,
@@ -50,7 +50,6 @@ const ApplyScreen = ({route, navigation}) => {
         wantedIncome: parseInt(values.wantedIncome, 10),
         picture: picture,
         resume: resume,
-        // offer: offer['@id'],
       });
       if (res.status === 201) {
         resetForm();
@@ -189,4 +188,4 @@ const ApplyScreen = ({route, navigation}) => {
   );
 };
 
-export default ApplyScreen;
+export default Form;
