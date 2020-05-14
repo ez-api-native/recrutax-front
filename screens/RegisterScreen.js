@@ -2,32 +2,29 @@ import {useFormik} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import {TextInput, Button, Text} from 'react-native-paper';
+import {TextInput, Button, Text, Title} from 'react-native-paper';
+import {authIsLogged, token} from '~/lib/asyncStorage';
 import axios from '~/lib/axios';
 
 const RegisterScreen = ({navigation}) => {
   const [errors, setErrors] = useState(null);
 
-  const alreadyLogged = async () => {
-    try {
-      const res = await AsyncStorage.getItem('JwtToken');
-      if (!res) {
-        navigation.navigate('Login');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
-    alreadyLogged();
+    authIsLogged(navigation);
   }, []);
 
-  const register = async values =>
-    await axios
+  const register = async values => {
+    const res = await axios
       .post('/users', values)
-      .then(response => console.log('Connected', response))
       .catch(error => setErrors(error));
+    await AsyncStorage.setItem('JwtToken', res)
+      .then(() => {
+        if (token) {
+          navigation.navigate('Home');
+        }
+      })
+      .catch(error => setErrors(error));
+  };
 
   const {
     values: {email, password},
@@ -43,26 +40,25 @@ const RegisterScreen = ({navigation}) => {
 
   return (
     <View>
-      <View>
-        <TextInput
-          label="Email"
-          name="email"
-          value={email}
-          onChangeText={handleChange('email')}
-        />
-        <TextInput
-          label="Password"
-          name="password"
-          value={password}
-          onChangeText={handleChange('password')}
-          secureTextEntry
-        />
-        <Button onPress={handleSubmit}>Submit</Button>
-        <Button onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.text}>No account ? Sign Up Here</Text>
-        </Button>
-        {errors && <Text>{errors}</Text>}
-      </View>
+      <Title>Register</Title>
+      <TextInput
+        label="Email"
+        name="email"
+        value={email}
+        onChangeText={handleChange('email')}
+      />
+      <TextInput
+        label="Password"
+        name="password"
+        value={password}
+        onChangeText={handleChange('password')}
+        secureTextEntry
+      />
+      <Button onPress={handleSubmit}>Submit</Button>
+      <Button onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.text}>Already have an account ? Sign Up Here</Text>
+      </Button>
+      {errors && <Text>{errors}</Text>}
     </View>
   );
 };
