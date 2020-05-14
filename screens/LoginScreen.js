@@ -12,7 +12,7 @@ const LoginScreen = ({navigation}) => {
 
   useEffect(() => {
     authIsLogged(navigation);
-  }, []);
+  }, [navigation]);
 
   const login = async values => {
     const res = await axios
