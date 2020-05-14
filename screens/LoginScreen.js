@@ -2,9 +2,9 @@ import {useFormik} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Button, TextInput, Text} from 'react-native-paper';
-import {token, authIsLogged} from '../lib/asyncStorage';
-import axios from '../lib/axios';
+import {Button, TextInput, Text, Title} from 'react-native-paper';
+import {token, authIsLogged} from '~/lib/asyncStorage';
+import axios from '~/lib/axios';
 
 const LoginScreen = ({navigation}) => {
   const [errors, setErrors] = useState(null);
@@ -41,6 +41,7 @@ const LoginScreen = ({navigation}) => {
 
   return (
     <View>
+      <Title>Login</Title>
       <TextInput
         label="Email"
         name="email"
@@ -56,7 +57,7 @@ const LoginScreen = ({navigation}) => {
       />
       <Button onPress={handleSubmit}>Submit</Button>
       <Button onPress={() => navigation.navigate('Register')}>
-        <Text style={styles.text}>Already have an account ? Sign Up Here</Text>
+        <Text style={styles.text}>No account ? Sign Up Here</Text>
       </Button>
       {errors && <Text>{errors}</Text>}
     </View>
