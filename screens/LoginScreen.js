@@ -1,5 +1,6 @@
+import {useFormik} from 'formik';
 import React, {useCallback, useEffect, useState} from 'react';
-import {View} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {
   Button,
   Colors,
@@ -9,8 +10,7 @@ import {
   Title,
 } from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
-import {useFormik} from 'formik';
-import AuthValidationSchema from '~/lib/validationSchema';
+import {AuthValidationSchema} from '~/lib/validationSchema';
 import {authIsLogged} from '~/lib/asyncStorage';
 import axios from '~/lib/axios';
 
@@ -19,7 +19,7 @@ const LoginScreen = ({navigation}) => {
 
   useEffect(() => {
     authIsLogged(navigation);
-  }, [navigation]);
+  }, []);
 
   const {
     errors,
@@ -41,6 +41,7 @@ const LoginScreen = ({navigation}) => {
             'JwtToken',
             JSON.stringify(res.data.token),
           );
+          navigation.navigate('Offer');
         }
       } catch (e) {
         setErrorsForm('Email or password incorrect');
@@ -61,7 +62,7 @@ const LoginScreen = ({navigation}) => {
 
   return (
     <View>
-      <Title>Login</Title>
+      <Title style={styles.title}>Login</Title>
       <TextInput
         label="Email"
         name="email"
@@ -97,5 +98,12 @@ const LoginScreen = ({navigation}) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  title: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+});
 
 export default LoginScreen;

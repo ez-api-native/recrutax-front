@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import {View} from 'react-native';
 import {useFormik} from 'formik';
-import axios from '~/lib/axios';
 import {Button, Card, TextInput, Title} from 'react-native-paper';
+import axios from '~/lib/axios';
+import Header from '~/components/Header';
 
 const Apply = ({navigation}) => {
   const [submission, setSubmission] = useState(null);
@@ -25,6 +26,7 @@ const Apply = ({navigation}) => {
 
   return (
     <View>
+      <Header title="Apply a Code" />
       <TextInput
         label="Code"
         value={code}
@@ -44,6 +46,22 @@ const Apply = ({navigation}) => {
                 })
               }>
               Apply
+            </Button>
+            <Button
+              onPress={() =>
+                axios.patch(
+                  `/submissions/${submission.id}`,
+                  {
+                    status: 'refused',
+                  },
+                  {
+                    headers: {
+                      'Content-Type': 'application/merge-patch+json',
+                    },
+                  },
+                )
+              }>
+              Refuse
             </Button>
           </Card.Actions>
         </Card>
