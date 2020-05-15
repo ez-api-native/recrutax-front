@@ -15,15 +15,20 @@ const OffersList = ({navigation}) => {
       setOffers(data['hydra:member']);
     });
   };
+  const getUserRole = async () => {
+    setRole(await getRole());
+  };
 
   useEffect(() => {
-    const getUserRole = async () => {
-      const userRole = await getRole();
-      setRole(userRole);
-    };
-    fetchData();
-    getUserRole();
-  }, []);
+    navigation.addListener('focus', () => {
+      fetchData();
+      getUserRole();
+    });
+    navigation.addListener('blur', () => {
+      setOffers([]);
+      setRole(null);
+    });
+  }, [navigation]);
 
   return (
     <ScrollView
@@ -40,7 +45,9 @@ const OffersList = ({navigation}) => {
       }>
       <Header title="Offers" />
       {role === 'recruiter' && (
-        <Button onPress={() => navigation.navigate('OfferCreate')}>
+        <Button
+          mode="contained"
+          onPress={() => navigation.navigate('OfferCreate')}>
           Create an offer
         </Button>
       )}

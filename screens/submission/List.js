@@ -15,8 +15,13 @@ const SubmissionsList = ({navigation}) => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    navigation.addListener('focus', () => {
+      fetchData();
+    });
+    navigation.addListener('blur', () => {
+      setSubmissions([]);
+    });
+  }, [navigation]);
 
   return (
     <ScrollView
@@ -33,7 +38,7 @@ const SubmissionsList = ({navigation}) => {
       }>
       <Header title="Submissions" />
       <List
-        columns={['id', 'name']}
+        columns={['id', 'offer', 'status']}
         data={submissions}
         // onPress={submission => navigation.navigate('SubmissionView', {submission})}
       />

@@ -41,6 +41,7 @@ const LoginScreen = ({navigation}) => {
             'JwtToken',
             JSON.stringify(res.data.token),
           );
+          navigation.navigate('Offer');
         }
       } catch (e) {
         setErrorsForm('Email or password incorrect');

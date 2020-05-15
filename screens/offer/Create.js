@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {ScrollView, KeyboardAvoidingView} from 'react-native';
 import {useFormik} from 'formik';
 import {Button, Title, TextInput, HelperText} from 'react-native-paper';
 import DateInput from '~/components/DateInput';
@@ -41,58 +41,62 @@ const OfferCreate = ({navigation}) => {
   });
 
   return (
-    <View>
-      <Header title="Create an Offer" />
-      <TextInput
-        label="Name"
-        value={name}
-        onChangeText={handleChange('name')}
-      />
-      <HelperText type="error" visible={errors.name}>
-        {errors.name}
-      </HelperText>
-      <TextInput
-        label="Company description"
-        value={companyDescription}
-        onChangeText={handleChange('companyDescription')}
-      />
-      <HelperText type="error" visible={errors.companyDescription}>
-        {errors.companyDescription}
-      </HelperText>
-      <TextInput
-        label="Offer description"
-        value={offerDescription}
-        onChangeText={handleChange('offerDescription')}
-      />
-      <HelperText type="error" visible={errors.offerDescription}>
-        {errors.offerDescription}
-      </HelperText>
-      <DateInput
-        label="Start date"
-        value={startDate}
-        onChange={date => {
-          setFieldValue('startDate', date);
-          setFieldTouched('startDate', true);
-        }}
-      />
-      <TextInput
-        label="Contract type"
-        value={contractType}
-        onChangeText={handleChange('contractType')}
-      />
-      <HelperText type="error" visible={errors.contractType}>
-        {errors.contractType}
-      </HelperText>
-      <TextInput
-        label="Place"
-        value={place}
-        onChangeText={handleChange('place')}
-      />
-      <HelperText type="error" visible={errors.place}>
-        {errors.place}
-      </HelperText>
-      <Button onPress={handleSubmit}>Submit</Button>
-    </View>
+    <ScrollView>
+      <KeyboardAvoidingView>
+        <Header title="Create an Offer" />
+        <TextInput
+          label="Name"
+          value={name}
+          onChangeText={handleChange('name')}
+        />
+        <HelperText type="error" visible={errors.name}>
+          {errors.name}
+        </HelperText>
+        <TextInput
+          label="Company description"
+          value={companyDescription}
+          onChangeText={handleChange('companyDescription')}
+        />
+        <HelperText type="error" visible={errors.companyDescription}>
+          {errors.companyDescription}
+        </HelperText>
+        <TextInput
+          label="Offer description"
+          value={offerDescription}
+          onChangeText={handleChange('offerDescription')}
+        />
+        <HelperText type="error" visible={errors.offerDescription}>
+          {errors.offerDescription}
+        </HelperText>
+        <DateInput
+          label="Start date"
+          value={startDate}
+          onChange={date => {
+            setFieldValue('startDate', date);
+            setFieldTouched('startDate', true);
+          }}
+        />
+        <TextInput
+          label="Contract type"
+          value={contractType}
+          onChangeText={handleChange('contractType')}
+        />
+        <HelperText type="error" visible={errors.contractType}>
+          {errors.contractType}
+        </HelperText>
+        <TextInput
+          label="Place"
+          value={place}
+          onChangeText={handleChange('place')}
+        />
+        <HelperText type="error" visible={errors.place}>
+          {errors.place}
+        </HelperText>
+        <Button mode="contained" onPress={handleSubmit}>
+          Create
+        </Button>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 

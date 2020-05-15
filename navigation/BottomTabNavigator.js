@@ -12,19 +12,24 @@ import {authNotLogged} from '~/lib/asyncStorage';
 import getRole from '~/lib/JWTDecoder';
 
 const NavigatorTab = createMaterialBottomTabNavigator();
-const INITIAL_ROUTE_NAME = 'Home';
+const INITIAL_ROUTE_NAME = 'Offer';
 
 const BottomTabNavigator = () => {
   const navigation = useNavigation();
-  const [role, setRole] = useState('');
+  const [role, setRole] = useState(null);
+  const getUserRole = async () => {
+    const userRole = await getRole();
+    setRole(userRole);
+  };
 
   useEffect(() => {
-    const getUserRole = async () => {
-      const userRole = await getRole();
-      setRole(userRole);
-    };
-    authNotLogged(navigation);
-    getUserRole();
+    navigation.addListener('focus', () => {
+      authNotLogged(navigation);
+      getUserRole();
+    });
+    navigation.addListener('blur', () => {
+      setRole(null);
+    });
   }, [navigation]);
 
   return (
@@ -47,86 +52,88 @@ const BottomTabNavigator = () => {
           ),
         }}
       />
-      <NavigatorTab.Screen
-        name="OfferView"
-        component={OfferViewScreen}
-        options={{
-          title: 'OfferView',
-          tabBarIcon: ({color, focused}) => (
-            <MaterialCommunityIcons
-              color={color}
-              focused={focused}
-              size={26}
-              name="file-document-edit"
-            />
-          ),
-        }}
-      />
-      <NavigatorTab.Screen
-        name="OfferCreate"
-        component={OfferCreateScreen}
-        options={{
-          title: 'OfferCreate',
-          tabBarIcon: ({color, focused}) => (
-            <MaterialCommunityIcons
-              color={color}
-              focused={focused}
-              size={26}
-              name="plus-circle"
-            />
-          ),
-        }}
-      />
-      {role === 'candidate' && (
-        <NavigatorTab.Screen
-          name="Submissions"
-          component={SubmissionList}
-          options={{
-            title: 'My submissions',
-            tabBarIcon: ({color, focused}) => (
-              <MaterialCommunityIcons
-                color={color}
-                focused={focused}
-                size={26}
-                name="library-books"
-              />
-            ),
-          }}
-        />
+      {role === 'recruiter' && (
+        <>
+          <NavigatorTab.Screen
+            name="OfferCreate"
+            component={OfferCreateScreen}
+            options={{
+              title: 'OfferCreate',
+              tabBarIcon: ({color, focused}) => (
+                <MaterialCommunityIcons
+                  color={color}
+                  focused={focused}
+                  size={26}
+                  name="plus-circle"
+                />
+              ),
+            }}
+          />
+          <NavigatorTab.Screen
+            name="OfferView"
+            component={OfferViewScreen}
+            options={{
+              title: 'OfferView',
+              tabBarIcon: ({color, focused}) => (
+                <MaterialCommunityIcons
+                  color={color}
+                  focused={focused}
+                  size={26}
+                  name="file-document-edit"
+                />
+              ),
+            }}
+          />
+        </>
       )}
       {role === 'candidate' && (
-        <NavigatorTab.Screen
-          name="ApplySearch"
-          component={Apply}
-          options={{
-            title: 'Apply',
-            tabBarIcon: ({color, focused}) => (
-              <MaterialCommunityIcons
-                color={color}
-                focused={focused}
-                size={26}
-                name="comment-search"
-              />
-            ),
-          }}
-        />
-      )}
-      {role === 'candidate' && (
-        <NavigatorTab.Screen
-          name="ApplyForm"
-          component={Form}
-          options={{
-            title: 'Apply',
-            tabBarIcon: ({color, focused}) => (
-              <MaterialCommunityIcons
-                color={color}
-                focused={focused}
-                size={26}
-                name="format-columns"
-              />
-            ),
-          }}
-        />
+        <>
+          <NavigatorTab.Screen
+            name="Submissions"
+            component={SubmissionList}
+            options={{
+              title: 'Submissions',
+              tabBarIcon: ({color, focused}) => (
+                <MaterialCommunityIcons
+                  color={color}
+                  focused={focused}
+                  size={26}
+                  name="library-books"
+                />
+              ),
+            }}
+          />
+          <NavigatorTab.Screen
+            name="ApplySearch"
+            component={Apply}
+            options={{
+              title: 'Apply',
+              tabBarIcon: ({color, focused}) => (
+                <MaterialCommunityIcons
+                  color={color}
+                  focused={focused}
+                  size={26}
+                  name="comment-search"
+                />
+              ),
+            }}
+          />
+          <NavigatorTab.Screen
+            name="ApplyForm"
+            component={Form}
+            options={{
+              title: 'Apply',
+              tabBarIcon: ({color, focused}) => (
+                <MaterialCommunityIcons
+                  color={color}
+                  focused={focused}
+                  size={26}
+                  name="format-columns"
+                />
+              ),
+            }}
+          />
+        </>
       )}
     </NavigatorTab.Navigator>
   );

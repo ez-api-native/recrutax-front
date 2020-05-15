@@ -4,9 +4,10 @@ import {KeyboardAvoidingView, ScrollView} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
 import FilePickerManager from 'react-native-file-picker';
 import ImagePicker from 'react-native-image-picker';
-import axios from '~/lib/axios';
 import RNFetchBlob from 'rn-fetch-blob';
 import AsyncStorage from '@react-native-community/async-storage';
+import axios from '~/lib/axios';
+import {ENTRYPOINT} from '~/config/entrypoint';
 
 const Form = ({route, navigation}) => {
   const {submission} = route.params;
@@ -39,20 +40,29 @@ const Form = ({route, navigation}) => {
       email: submission.email,
     },
     onSubmit: async values => {
-      const res = await axios.patch(`/submissions/${submission.id}`, {
-        firstname: values.firstname,
-        lastname: values.lastname,
-        sexe: values.sexe,
-        email: values.email,
-        age: parseInt(values.age, 10),
-        address: values.address,
-        motivation: values.motivation,
-        wantedIncome: parseInt(values.wantedIncome, 10),
-        picture: picture,
-        resume: resume,
-      });
-      if (res.status === 201) {
+      const res = await axios.patch(
+        `/submissions/${submission.id}`,
+        {
+          firstname: values.firstname,
+          lastname: values.lastname,
+          sexe: values.sexe,
+          email: values.email,
+          age: parseInt(values.age, 10),
+          address: values.address,
+          motivation: values.motivation,
+          wantedIncome: parseInt(values.wantedIncome, 10),
+          picture: picture,
+          resume: resume,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/merge-patch+json',
+          },
+        },
+      );
+      if (res.status === 200) {
         resetForm();
+        navigation.navigate('Submissions');
       }
     },
   });
@@ -70,7 +80,7 @@ const Form = ({route, navigation}) => {
       } else {
         RNFetchBlob.fetch(
           'POST',
-          'https://localhost:8443/media_objects',
+          `${ENTRYPOINT}/media_objects`,
           {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
@@ -105,7 +115,7 @@ const Form = ({route, navigation}) => {
       } else {
         RNFetchBlob.fetch(
           'POST',
-          'https://localhost:8443/media_objects',
+          `${ENTRYPOINT}/media_objects`,
           {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',

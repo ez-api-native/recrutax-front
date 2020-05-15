@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Badge,
@@ -41,7 +41,7 @@ const OfferCreate = ({route, navigation}) => {
   }, [fetchSubmissions]);
 
   return (
-    <View style={styles.view}>
+    <ScrollView style={styles.view}>
       <Button
         icon={() => <MaterialCommunityIcons name="arrow-left" size={36} />}
         onPress={() => navigation.goBack()}
@@ -66,7 +66,7 @@ const OfferCreate = ({route, navigation}) => {
           </Card>
         ),
       )}
-    </View>
+    </ScrollView>
   );
 };
 

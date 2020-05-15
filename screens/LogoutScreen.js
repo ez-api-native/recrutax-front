@@ -1,14 +1,12 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Button} from 'react-native-paper';
-import {useNavigation} from '@react-navigation/native';
 import {logout} from '~/lib/asyncStorage';
 
-const LogoutScreen = () => {
-  const navigation = useNavigation();
+const LogoutScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <Button onPress={logout(navigation)} />
+      <Button onPress={() => logout(navigation)}>Logout</Button>
     </View>
   );
 };

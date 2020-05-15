@@ -47,6 +47,22 @@ const Apply = ({navigation}) => {
               }>
               Apply
             </Button>
+            <Button
+              onPress={() =>
+                axios.patch(
+                  `/submissions/${submission.id}`,
+                  {
+                    status: 'refused',
+                  },
+                  {
+                    headers: {
+                      'Content-Type': 'application/merge-patch+json',
+                    },
+                  },
+                )
+              }>
+              Refuse
+            </Button>
           </Card.Actions>
         </Card>
       )}
