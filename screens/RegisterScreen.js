@@ -66,6 +66,8 @@ const RegisterScreen = ({navigation}) => {
         name="email"
         value={email}
         onChangeText={handleChange('email')}
+        keyboardType="email-address"
+        textContentType="email"
       />
       <HelperText type="error" visible={errors.email}>
         {errors.email}
@@ -76,6 +78,7 @@ const RegisterScreen = ({navigation}) => {
         value={password}
         onChangeText={handleChange('password')}
         secureTextEntry
+        textContentType="newPassword"
       />
       <HelperText type="error" visible={errors.password}>
         {errors.password}

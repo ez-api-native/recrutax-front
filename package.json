@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android && adb reverse tcp:8443 tcp:8443",
+    "android-release": "react-native run-android --variant=release",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
@@ -23,16 +24,16 @@
     "jwt-decode": "^2.2.0",
     "react": "16.11.0",
     "react-native": "0.62.2",
-    "react-native-file-picker": "^0.0.19",
+    "react-native-document-picker": "^3.4.0",
+    "react-native-eject": "^0.1.2",
     "react-native-gesture-handler": "^1.6.1",
-    "react-native-image-picker": "^2.3.1",
     "react-native-paper": "^3.10.1",
     "react-native-reanimated": "^1.8.0",
     "react-native-safe-area-context": "^1.0.0",
     "react-native-screens": "^2.7.0",
     "react-native-vector-icons": "^6.6.0",
-    "yup": "^0.28.5",
-    "rn-fetch-blob": "^0.12.0"
+    "rn-fetch-blob": "^0.12.0",
+    "yup": "^0.28.5"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",

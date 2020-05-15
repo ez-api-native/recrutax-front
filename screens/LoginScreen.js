@@ -68,6 +68,7 @@ const LoginScreen = ({navigation}) => {
         name="email"
         value={email}
         onChangeText={handleChange('email')}
+        keyboardType="email-address"
       />
       <HelperText type="error" visible={errors.email}>
         {errors.email}
@@ -82,7 +83,9 @@ const LoginScreen = ({navigation}) => {
       <HelperText type="error" visible={errors.password}>
         {errors.password}
       </HelperText>
-      <Button mode="contained" onPress={handleSubmit}>Submit</Button>
+      <Button mode="contained" onPress={handleSubmit}>
+        Submit
+      </Button>
       <Button compact color={Colors.black} onPress={handleResetPassword}>
         Reset password
       </Button>

@@ -4541,10 +4541,15 @@ react-is@^16.12.0, react-is@^16.13.0, react-is@^16.7.0, react-is@^16.8.1, react-
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
 
-react-native-file-picker@^0.0.19:
-  version "0.0.19"
-  resolved "https://registry.yarnpkg.com/react-native-file-picker/-/react-native-file-picker-0.0.19.tgz#55cb357fae43f2daa870aa8aab201d48e147ded8"
-  integrity sha512-/dMCtJR8327DUHo2v+qtSVdPL5vwN+D8004+4A6+c6U/Ira7nbjKL7zlVRCOyJ/Sl0UON/HDlPZeVQ4xnBbtcQ==
+react-native-document-picker@^3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-document-picker/-/react-native-document-picker-3.4.0.tgz#7bbd110b8474a3322ac3178ec5446e2df64c8339"
+  integrity sha512-YdjiiElDdvOj55IDPNJ0kxXxzDRWyDymV/iYZJt34ueRWWFLIff+DymSjBc0QljrIFv7pODws2lo81+5Y0ww0w==
+
+react-native-eject@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-eject/-/react-native-eject-0.1.2.tgz#5824c332d092d845b1a77766c81023fa3c97bfd5"
+  integrity sha512-ITuAYOLMOiSXNAjWeucQPm5i6VVweuh/Zo2gfMFSCf1DjVrdOocWwy2kkg65ypbbt26tW6Vd3ZrqNRCsC9rqDA==
 
 react-native-gesture-handler@^1.6.1:
   version "1.6.1"
@@ -4554,11 +4559,6 @@ react-native-gesture-handler@^1.6.1:
     hoist-non-react-statics "^2.3.1"
     invariant "^2.2.4"
     prop-types "^15.7.2"
-
-react-native-image-picker@^2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-2.3.1.tgz#1977b65e07793d2c0b2d1976fb675c5f75ad7f11"
-  integrity sha512-c/a2h7/T7yBo5KlNQhcSn4xf4+6Li6LfJ59+GZT1ZzzWrj/6X8DiJ/TJBOlOZMC5tJriZKuRkWSsr74k6z+brw==
 
 react-native-iphone-x-helper@^1.2.1:
   version "1.2.1"

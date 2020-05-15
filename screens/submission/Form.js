@@ -1,13 +1,9 @@
 import {useFormik} from 'formik';
 import React, {useState} from 'react';
 import {KeyboardAvoidingView, ScrollView} from 'react-native';
-import {Button, TextInput} from 'react-native-paper';
-import FilePickerManager from 'react-native-file-picker';
-import ImagePicker from 'react-native-image-picker';
-import RNFetchBlob from 'rn-fetch-blob';
-import AsyncStorage from '@react-native-community/async-storage';
+import {Button, RadioButton, TextInput} from 'react-native-paper';
 import axios from '~/lib/axios';
-import {ENTRYPOINT} from '~/config/entrypoint';
+import Upload from '~/components/Upload';
 
 const Form = ({route, navigation}) => {
   const {submission} = route.params;
@@ -67,77 +63,6 @@ const Form = ({route, navigation}) => {
     },
   });
 
-  const handleChoosePicture = () => {
-    const token = AsyncStorage.getItem('token');
-
-    ImagePicker.showImagePicker(response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      } else {
-        RNFetchBlob.fetch(
-          'POST',
-          `${ENTRYPOINT}/media_objects`,
-          {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
-          [
-            {
-              name: 'file',
-              filename: response.fileName,
-              type: response.type,
-              data: RNFetchBlob.wrap('file://' + response.path),
-            },
-          ],
-        )
-          .then(res => res.json())
-          .then(result => setPicture(result['@id']))
-          .catch(err => {
-            console.log(err);
-          });
-      }
-    });
-  };
-
-  const handleChooseFile = async () => {
-    const token = await AsyncStorage.getItem('token');
-    FilePickerManager.showFilePicker(null, response => {
-      if (response.didCancel) {
-        console.log('User cancelled file picker');
-      } else if (response.error) {
-        console.log('FilePickerManager Error: ', response.error);
-      } else if (response.type !== 'application/pdf') {
-        console.log('Not pdf');
-      } else {
-        RNFetchBlob.fetch(
-          'POST',
-          `${ENTRYPOINT}/media_objects`,
-          {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
-          [
-            {
-              name: 'file',
-              filename: response.fileName,
-              type: response.type,
-              data: RNFetchBlob.wrap('file://' + response.path),
-            },
-          ],
-        )
-          .then(res => res.json())
-          .then(result => setResume(result['@id']))
-          .catch(err => {
-            console.log(err);
-          });
-      }
-    });
-  };
-
   return (
     <ScrollView>
       <KeyboardAvoidingView>
@@ -146,36 +71,40 @@ const Form = ({route, navigation}) => {
           name="firstname"
           value={firstname}
           onChangeText={handleChange('firstname')}
+          textContentType="givenName"
         />
         <TextInput
           label="Lastname"
           name="lastname"
           value={lastname}
           onChangeText={handleChange('lastname')}
+          textContentType="familyName"
         />
-        <TextInput
-          label="Sexe"
-          name="sexe"
-          value={sexe}
-          onChangeText={handleChange('sexe')}
-        />
+        <RadioButton.Group onValueChange={handleChange('sexe')} value={sexe}>
+          <RadioButton.Item label="Male" value="male" />
+          <RadioButton.Item label="Female" value="female" />
+        </RadioButton.Group>
         <TextInput
           label="Email"
           name="email"
           value={email}
           onChangeText={handleChange('email')}
+          textContentType="email"
+          keyboardType="email-address"
         />
         <TextInput
           label="Age"
           name="age"
           value={age}
           onChangeText={handleChange('age')}
+          keyboardType="number-pad"
         />
         <TextInput
           label="Address"
           name="address"
           value={address}
           onChangeText={handleChange('address')}
+          textContentType="addressCityAndState"
         />
         <TextInput
           label="Motivation"
@@ -189,9 +118,14 @@ const Form = ({route, navigation}) => {
           name="wantedIncome"
           value={wantedIncome}
           onChangeText={handleChange('wantedIncome')}
+          keyboardType="number-pad"
         />
-        <Button onPress={handleChoosePicture}>Choose picture</Button>
-        <Button onPress={handleChooseFile}>Choose resume</Button>
+        <Upload type="images" onChange={setPicture}>
+          Choose picture
+        </Upload>
+        <Upload type="pdf" onChange={setResume}>
+          Choose resume
+        </Upload>
         <Button onPress={handleSubmit}>Submit</Button>
       </KeyboardAvoidingView>
     </ScrollView>

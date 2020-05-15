@@ -40,7 +40,7 @@ const SubmissionsList = ({navigation}) => {
       <List
         columns={['id', 'offer', 'status']}
         data={submissions}
-        // onPress={submission => navigation.navigate('SubmissionView', {submission})}
+        onPress={submission => navigation.navigate('ApplyForm', {submission})}
       />
     </ScrollView>
   );
