@@ -57,7 +57,7 @@ const BottomTabNavigator = () => {
               color={color}
               focused={focused}
               size={26}
-              name="library-books"
+              name="file-document-edit"
             />
           ),
         }}

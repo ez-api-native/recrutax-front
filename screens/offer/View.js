@@ -1,6 +1,14 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {View} from 'react-native';
-import {Badge, Card, Paragraph, Portal, Title} from 'react-native-paper';
+import {View, StyleSheet} from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+  Badge,
+  Button,
+  Card,
+  Paragraph,
+  Portal,
+  Title,
+} from 'react-native-paper';
 import axios from '~/lib/axios';
 import FABView from '~/components/offer/FABView';
 
@@ -33,11 +41,16 @@ const OfferCreate = ({route, navigation}) => {
   }, [fetchSubmissions]);
 
   return (
-    <View>
+    <View style={styles.view}>
+      <Button
+        icon={() => <MaterialCommunityIcons name="arrow-left" size={36} />}
+        onPress={() => navigation.goBack()}
+        style={styles.icon}
+      />
       <Portal>
         <FABView offer={offer} onAction={handleFABActions} />
       </Portal>
-      <Title>{offer.name}</Title>
+      <Title style={styles.title}>{offer.name}</Title>
       {submissions.map(
         ({id, firstname, lastname, email, motivation, status}) => (
           <Card key={`submission-${id}`}>
@@ -56,5 +69,21 @@ const OfferCreate = ({route, navigation}) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  view: {
+    display: 'flex',
+    marginTop: 5,
+  },
+
+  title: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+
+  icon: {
+    alignItems: 'flex-start',
+  },
+});
 
 export default OfferCreate;

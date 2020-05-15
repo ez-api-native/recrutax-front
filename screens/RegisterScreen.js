@@ -1,7 +1,6 @@
 import {useFormik} from 'formik';
 import React, {useEffect, useState} from 'react';
-import {View} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+import {StyleSheet, View} from 'react-native';
 import {
   Button,
   Colors,
@@ -11,7 +10,8 @@ import {
   TextInput,
   Title,
 } from 'react-native-paper';
-import AuthValidationSchema from '~/lib/validationSchema';
+import AsyncStorage from '@react-native-community/async-storage';
+import {AuthValidationSchema} from '~/lib/validationSchema';
 import {authIsLogged} from '~/lib/asyncStorage';
 import axios from '~/lib/axios';
 
@@ -20,7 +20,7 @@ const RegisterScreen = ({navigation}) => {
 
   useEffect(() => {
     authIsLogged(navigation);
-  }, [navigation]);
+  }, []);
 
   const {
     errors,
@@ -60,7 +60,7 @@ const RegisterScreen = ({navigation}) => {
 
   return (
     <View>
-      <Title>Register</Title>
+      <Title style={styles.title}>Register</Title>
       <TextInput
         label="Email"
         name="email"
@@ -100,5 +100,12 @@ const RegisterScreen = ({navigation}) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  title: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+});
 
 export default RegisterScreen;
